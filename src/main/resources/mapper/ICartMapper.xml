@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huige.store.mapper.CartMapper">
+    <select id="findVOByUid" resultType="com.huige.store.vo.CartVO">
+        SELECT cid,
+               uid,
+               pid,
+               t_cart.price,
+               t_cart.num,
+               t_product.title,
+               t_product.image,
+               t_product.price AS realPrice
+        FROM t_cart
+                 LEFT JOIN t_product ON t_cart.pid = t_product.id
+        WHERE uid = #{uid}
+        ORDER BY t_cart.modified_time DESC
+    </select>
+
+    <select id="findVOByCid" resultType="com.huige.store.vo.CartVO">
+        SELECT cid,
+               uid,
+               pid,
+               t_cart.price,
+               t_cart.num,
+               t_product.title,
+               t_product.image,
+               t_product.price AS realPrice
+        FROM t_cart
+                 LEFT JOIN t_product ON t_cart.pid = t_product.id
+        WHERE cid IN (
+            <foreach collection="array" item="cid" separator=",">
+                #{cid}
+            </foreach>
+            )
+        ORDER BY t_cart.modified_time DESC
+    </select>
+</mapper>
